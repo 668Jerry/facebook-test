@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '683537225059023',
+                xfbml      : false,
+                version    : 'v1.0'
+            });
+
+
+            FB.getLoginStatus(function(response) {
+                console.log(response);
+                if (response.status === 'connected') {
+                    //已登入，已授權
+                    // the user is logged in and has authenticated your
+                    // app, and response.authResponse supplies
+                    // the user's ID, a valid access token, a signed
+                    // request, and the time the access token
+                    // and signed request each expire
+                    document.getElementById("main").style.display = 'block';
+//                    getMe();
+//                var uid = response.authResponse.userID;
+//                //使用者的user id
+//                var accessToken = response.authResponse.accessToken;
+//accessToken可以讓server留下來
+//            } else if (response.status === 'not_authorized') {
+//                //已登入，未授權
+//                // the user is logged in to Facebook,
+//                // but has not authenticated your app
+                } else {
+                    document.getElementById("fb-login").style.display = 'block';
+                    //尚未登入
+                    // the user isn't logged in to Facebook.
+                }
+            });
+        };
+
+
+        function login() {//鼓勵使用者進行登入授權
+            FB.login(function(response) {
+                if (response.authResponse) {//使用者授權
+                    console.log('Welcome!  Fetching your information.... ');
+                    document.getElementById('fb-login').style.display = 'none';
+                    document.getElementById('main').style.display = 'block';
+                    getMe();
+//                    FB.api('/me', function(response) {
+//                        console.log('Good to see you, ' + response.name + '.');
+//                    });
+                } else {//使用者不授權
+//                    console.log('User cancelled login or did not fully authorize.');
+                    alert('Please login');
+                }
+            }, {scope: 'email, user_friends'});
+
+        }
+
+        function getMe(){
+            FB.api('/me', function(response){document.getElementById('welcome').innerHTML = 'Welcome:' + response.name; console.log(response);alert(response.id);});
+            getFriends();
+        }
+
+        function getFriends(){
+            FB.api('/me/friends', function(response){console.log(response);});
+        }
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+</head>
+<body>
+<div id="fb-login">
+    <button onclick="login();">Facebook Login</button>
+</div>
+<div id="main" style="display: none">
+    <div id="welcome"></div>
+    <div id="friends"></div>
+</div>
+</body>
+</html>
