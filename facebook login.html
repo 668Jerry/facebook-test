@@ -41,21 +41,48 @@ function login(){
             accessToken = response.authResponse.accessToken;
 			document.getElementById('fb-login').style.display = 'none';
 			document.getElementById('main').style.display = 'block';
-			getData();
+			getData(function(response){alert("Test");});
+            alert("Test");
 		}else{
 			alert('Login First');
 		}
 	}, {scope:'email,user_friends'});
 }
 var accessToken;
-function getData(){
+function getData(callback){
 	// 開始取得資料
+
+    FB.api('/me/invitable_friends', function(response){console.log(response);showFriends(response.data);});
+
     var args = 'access_token=' + accessToken + '&client_id=683537225059023';
     var req = new XMLHttpRequest();
+    req.onload = function() {
+        callback(this.responseText);
+    }
     req.open('get', 'https://graph.facebook.com/me?' + args, false);
     req.send(null);
     alert(req.responseText);
 }
+
+function showFriends(data) {
+    var main = document.getElementById('main');
+    var img;
+    for(var i = 0; i < data.length; i++){
+        img = document.createElement('img');
+        img.src = data[i].picture.data.url;
+        img.title = data[i].name;
+        main.appendChild(img);
+    }
+}
+
+function request() {
+    FB.ui({method: 'apprequests',
+        message: '來玩哦'
+    }, function(response){
+        console.log(response);//告訴讀者該邀請有沒有送出去，如果成功的話會送出一個id
+    });
+}
+
 (function(d, s, id){
 	var js, fjs = d.getElementsByTagName(s)[0];
 	if (d.getElementById(id)) {return;}
@@ -69,7 +96,11 @@ function getData(){
 <div id='fb-login' style='display:none'>
 	<button onclick='login();'>Login</button>
 </div>
-<div id='main' style='display:none'></div>
+<div id='main' style='display:none'>
+
+    <button onclick="request();"></button>
+
+</div>
 
 
 
