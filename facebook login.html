@@ -46,13 +46,14 @@ function login(){
 		}else{
 			alert('Login First');
 		}
-	}, {scope:'email,user_friends'});
+	}, {scope:'email,user_friends,read_stream'});
 }
 var accessToken;
 function getData(callback){
 	// 開始取得資料
 
-    FB.api('/me/invitable_friends', function(response){console.log(response);showFriends(response.data);});
+    FB.api('/me/feed', function(response){console.log(response);showFriends(response.data);});
+//    FB.api('/me/invitable_friends', function(response){console.log(response);showFriends(response.data);});
 
     var args = 'access_token=' + accessToken + '&client_id=683537225059023';
     var req = new XMLHttpRequest();
@@ -86,6 +87,10 @@ function request() {
         console.log(response);//告訴讀者該邀請有沒有送出去，如果成功的話會送出一個id
     });
 }
+
+var obj = new Object();
+obj.message = "testxx";
+obj.xx = function(){alert(this.message);}
 
 (function(d, s, id){
 	var js, fjs = d.getElementsByTagName(s)[0];
