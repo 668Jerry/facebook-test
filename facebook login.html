@@ -3,6 +3,21 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Facebook Login</title>
+
+
+    <script>
+        var getLoginStatus = function(callback){
+            //請旁支線程去取得當前使用者登入狀態
+            var response = "connected";
+            callback(response);
+            //此時主線程往下跑
+        }
+        getLoginStatus(function(x){alert(x);});
+        alert("test");
+        getData();
+    </script>
+
+
 <script type="text/javascript">
 window.fbAsyncInit = function(){
 	FB.init({
@@ -12,6 +27,7 @@ window.fbAsyncInit = function(){
 	});
 	FB.getLoginStatus(function(response) {
 		if(response.status == 'connected'){
+            accessToken = response.authResponse.accessToken;
 			document.getElementById('main').style.display = 'block';
 			getData();
 		}else{
@@ -22,6 +38,7 @@ window.fbAsyncInit = function(){
 function login(){
 	FB.login(function(response){
 		if(response.authResponse){
+            accessToken = response.authResponse.accessToken;
 			document.getElementById('fb-login').style.display = 'none';
 			document.getElementById('main').style.display = 'block';
 			getData();
@@ -30,8 +47,14 @@ function login(){
 		}
 	}, {scope:'email,user_friends'});
 }
+var accessToken;
 function getData(){
 	// 開始取得資料
+    var args = 'access_token=' + accessToken + '&client_id=683537225059023';
+    var req = new XMLHttpRequest();
+    req.open('get', 'https://graph.facebook.com/me?' + args, false);
+    req.send(null);
+    alert(req.responseText);
 }
 (function(d, s, id){
 	var js, fjs = d.getElementsByTagName(s)[0];
@@ -47,5 +70,9 @@ function getData(){
 	<button onclick='login();'>Login</button>
 </div>
 <div id='main' style='display:none'></div>
+
+
+
+<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 </body>
 </html>
