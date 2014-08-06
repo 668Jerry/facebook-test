@@ -71,13 +71,17 @@ function showFriends(data) {
         img = document.createElement('img');
         img.src = data[i].picture.data.url;
         img.title = data[i].name;
+        img.userId = data[i].id;
+        img.onclick = request;
         main.appendChild(img);
     }
 }
 
 function request() {
     FB.ui({method: 'apprequests',
-        message: '來玩哦'
+        message: '來玩哦',
+        to: this.userId,
+        //to: '裡面寫上朋友id1, id2, id3, AVlm-Vyv2HG4CJ1w_2bF_NfstljWatkV0rxyzBfs1CZU9Z2BBHc5u6MCl227fhxfDXIlP-3WwzEZ34MqlKmTA2ooe6A0MG0YQQo6NNEALr2I_Q'
     }, function(response){
         console.log(response);//告訴讀者該邀請有沒有送出去，如果成功的話會送出一個id
     });
